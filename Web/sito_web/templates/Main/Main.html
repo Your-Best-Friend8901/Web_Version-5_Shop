@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+</head>
+<body>
+    <div class="head">
+        
+        <div>
+            <form action="{% url 'Main' %}" method="get">
+                <button name="Телепорт" value="head Категория">Категория</button>
+            </form>
+        </div>
+
+        <div>
+            <form action="{% url 'Main' %}" method="get">
+                <button name="Телепорт" value="head Корзина">Корзина</button>
+            </form>
+        </div>
+        {% if user.is_authenticated %}
+        <div>
+            <form action="{% url 'Main' %}" method="get">
+                <button name="Телепорт" value="head Аккаунт">Аккаунт</button>
+            </form>
+        </div>
+        {% else %}
+        <div>
+            <form action="{% url 'Main' %}" method="get">
+                <button name="Телепорт" value="head Регистрация">Логин/Регистрация</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    <div class="category">
+        <div class="category-1"><a href="{% url 'Main' %}"><button name="Телепорт" value="category Молочное"> Молочное</button></a></div>
+        <div class="category-2"><a href="{% url 'Main' %}"><button name="Телепорт" value="category Мясо">Мясо</button></a></div>
+    </div>
+    <div class="Main">
+        <h3>Добро пожаловать на сайт</h3>
+        {% if messages%}
+            {% for message in messages%}
+                <div class="success_messages">{{message}}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>

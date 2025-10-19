@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main_auth</title>
+</head>
+<body>
+    <div class="Form_Registration">
+        <div class="Teg_Registration"><h3>Регистрация</h3></div>
+        <br>
+        <p>Нажмите на кнопку чтобы перейди в страницу Регистраций:</p>
+        <a href="{% url 'Registration' %}"><button>Зайти</button></a>
+    </div>
+    <br>
+    <div class="Form_Login">
+        <div class="Teg_Login"><h3>Логин</h3></div>
+        <br>
+        <p>Нажмите на кнопку чтобы перейди в страницу Логина:</p>
+        <a href="{% url 'Login' %}"><button>Зайти</button></a>
+    </div>
+
+</body>
+</html>

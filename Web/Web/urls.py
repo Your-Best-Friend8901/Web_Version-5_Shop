@@ -20,5 +20,8 @@ from sito_web import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.Main_Page, name='Main')
+    path('',views.Main_Page, name='Main'),
+    path('registration/',views.Registration, name='Registration'),
+    path('main_auth/',views.Main_auth, name='Main_auth'),
+    path('login/',views.Login, name='Login')
 ]
