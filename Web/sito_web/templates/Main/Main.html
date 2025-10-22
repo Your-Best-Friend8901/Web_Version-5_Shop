@@ -11,25 +11,25 @@
         
         <div>
             <form action="{% url 'Main' %}" method="get">
-                <button name="Телепорт" value="head Категория">Категория</button>
+                <button name="Teleport" value="category">Категория</button>
             </form>
         </div>
 
         <div>
             <form action="{% url 'Main' %}" method="get">
-                <button name="Телепорт" value="head Корзина">Корзина</button>
+                <button name="Teleport" value="Cart">Корзина</button>
             </form>
         </div>
         {% if user.is_authenticated %}
         <div>
             <form action="{% url 'Main' %}" method="get">
-                <button name="Телепорт" value="head Аккаунт">Аккаунт</button>
+                <button name="Teleport" value="Account">Аккаунт</button>
             </form>
         </div>
         {% else %}
         <div>
             <form action="{% url 'Main' %}" method="get">
-                <button name="Телепорт" value="head Регистрация">Логин/Регистрация</button>
+                <button name="Teleport" value="Menu_auth">Логин/Регистрация</button>
             </form>
         </div>
         {% endif %}

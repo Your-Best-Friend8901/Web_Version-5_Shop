@@ -25,3 +25,4 @@ urlpatterns = [
     path('main_auth/',views.Main_auth, name='Main_auth'),
     path('login/',views.Login, name='Login')
 ]
+ 
