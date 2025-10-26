@@ -1,0 +1,15 @@
+
+.products {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    gap: 150px;
+}
+.textbutton {
+    display: flex;
+    flex-direction: row;
+    
+    
+    
+}

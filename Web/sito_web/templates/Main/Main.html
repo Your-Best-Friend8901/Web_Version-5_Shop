@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop</title>
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
 </head>
 <body>
     <div class="head">
@@ -35,14 +36,33 @@
         {% endif %}
     </div>
     <div class="category">
-        <div class="category-1"><a href="{% url 'Main' %}"><button name="Телепорт" value="category Молочное"> Молочное</button></a></div>
-        <div class="category-2"><a href="{% url 'Main' %}"><button name="Телепорт" value="category Мясо">Мясо</button></a></div>
+        <div class="category-1"><a href="{% url 'Category' category_name='Молочное'%}"><button>Молочное</button></a></div>
+        <div class="category-2"><a href="{% url 'Category' category_name='Мясо' %}"><button>Мясо</button></a></div>
     </div>
     <div class="Main">
         <h3>Добро пожаловать на сайт</h3>
+        
         {% if messages%}
             {% for message in messages%}
                 <div class="success_messages">{{message}}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="products">
+        {% if products%}
+            {% for product in products%}
+                <form action="{% url 'Cart_add' product.id %}" method="post">
+                    {% csrf_token%}
+                    {% if product.imagin%}
+                    <div class="product">
+                        <img src="{{ product.imagin.url }}" alt="{{product.name}}" >
+                    </div>
+                    {% endif %}
+                    <div class="textbutton">
+                        <p>{{product.name}} price:{{product.price}} руб</p>
+                        <button type="submit"> + </button>
+                    </div>
+                </form>
             {% endfor %}
         {% endif %}
     </div>

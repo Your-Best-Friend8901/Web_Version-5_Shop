@@ -1,17 +1,33 @@
 from django import forms
 from django.forms import ValidationError
 from django.contrib.auth.models import User
+from .models import Code_save
 
 class CodeForm(forms.Form):
     code = forms.CharField(max_length=7, widget=forms.TextInput)
+
+    def __init__(self,*args,**kwargs ):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args,**kwargs)
 
     def clean(self):
         cleaned_data =  super().clean()
         try:
             code = cleaned_data['code']
-            pass
+            user_id =  self.request.session.get('user_id',None)
+
+            if user_id is None:
+                raise ValidationError('Что то пошло не так повторить Авторизацию')
+
+            code_save = Code_save.objects.get(user_id=user_id)
+            code_db = code_save.code
+
+            if not str(code) == str(code_db):
+                raise ValidationError('Код не совпадает с отправленым Повторите либо Отправте себе новый код на почту')
+            
         except:
             pass
+        return cleaned_data
 
 class RegistrationForm(forms.Form):
     username=forms.CharField(min_length=3,max_length=16, widget=forms.TextInput)

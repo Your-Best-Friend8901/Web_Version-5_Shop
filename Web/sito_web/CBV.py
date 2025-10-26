@@ -1,9 +1,13 @@
 from django.views.generic import FormView,View
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
-from .forms import RegistrationForm
+from .forms import RegistrationForm,CodeForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import login
+from django.shortcuts import render,redirect
+from sito_web.Func.func import Create_code
+from .models import Code_save
 
 
 
@@ -20,10 +24,42 @@ class LoginView(FormView):
         
         return super().form_valid(form)
     
-
-class CodeView(View):
-    template_name = 'Main_auth/Login/login2.html'
     
+class CodeView(View):
+    def get(self,request):
+        check_get = self.request.GET.get('send_code',None)
+        form = CodeForm()
+        try:
+
+            if check_get is None:
+                return render(request=self.request,template_name='Main_auth/Login/Verification_email.html',context={'form':form})
+            
+            Create_code(request=self.request)
+
+            return render(request=self.request,template_name='Main_auth/Login/Verification_email.html',context={'form':form})
+        
+        except ValueError:
+
+            return render(request=self.request,template_name='Main/Main.html',context={'error':'Что то пошло не так повторить Авторизацию'})
+    
+    def post(self,request):
+
+        form = CodeForm(self.request.POST,request=self.request)
+
+        if form.is_valid():
+            user_id = self.request.session['user_id']
+            user = User.objects.get(id=user_id)
+
+            Code_save.objects.filter(user_id=user_id).delete()
+
+            login(request=self.request, user=user)
+            messages.success(request,'Вы прошли Авторизацию')
+            return redirect('Main')
+            
+        else:
+            return render(request=self.request,template_name='Main_auth/Login/Verification_email.html',context={'form':form})
+
+
 
 class RegistrationView(FormView):
     template_name = 'Main_auth/Registration/Registration.html'

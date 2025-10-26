@@ -17,12 +17,24 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from sito_web import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.Main_Page, name='Main'),
-    path('registration/',views.Registration, name='Registration'),
-    path('main_auth/',views.Main_auth, name='Main_auth'),
-    path('login/',views.Login, name='Login')
-]
- 
+    path('', views.Main_Page, name='Main'),
+
+    ####################### Авторизация
+    path('registration/', views.Registration, name='Registration'),
+    path('main_auth/', views.Main_auth, name='Main_auth'),
+    path('login/', views.Login, name='Login'),
+    path('Verification_email/', views.Verificate_Email, name='Login2'),
+    ########################
+
+    ######################## Корзина
+    path('cart/',views.Cart,name='Cart'),
+    path('cart/add/<int:id_product>/',views.Cart_add,name='Cart_add'),
+    ########################
+    path('category/<str:category_name>/',views.Category,name='Category'),
+    
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
