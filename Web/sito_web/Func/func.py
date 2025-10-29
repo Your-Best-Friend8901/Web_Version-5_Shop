@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.core.mail import send_mail
 import random
-from sito_web.models import Code_save,Products
+from sito_web.models import Code_save,Products,Cart,Cart_Item
 from django.contrib.auth.models import User
 
 
@@ -77,4 +77,11 @@ def Random_Product(request):
     products = Products.objects.order_by('?')[:5]
     
 
+def Add_to_Cart(request,id_product):
+    product =Products.objects.get(id=id_product)
+    user = request.user
+
+    cart, create = Cart.objects.get_or_create(user=user)
+
+    cart_item = Cart_Item.objects.create(cart=cart,product=product,quantity=1)
     

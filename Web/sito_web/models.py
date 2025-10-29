@@ -28,7 +28,7 @@ class Products(models.Model):
 class Cart_Item(models.Model):
     cart = models.ForeignKey(Cart , on_delete=models.CASCADE)
     product= models.ForeignKey(Products, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=0)
 
 #class Cart(models.Model):
 #    user = models.OneToOneField(User , on_delete=models.CASCADE)

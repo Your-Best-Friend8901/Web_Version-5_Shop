@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from .Func.func import Router_Get
-from .CBV import RegistrationView,LoginView,CodeView
+from django.shortcuts import render,redirect
+from sito_web.Func.func import Router_Get,Add_to_Cart
+from .views_CBV import RegistrationView,LoginView,CodeView,Cart
 from django.contrib import messages
 # Create your views here.
 
@@ -22,11 +22,16 @@ def Verificate_Email(request):
 def Category(request):
     pass
 
-def Cart(request):
-    pass
+def Cart_Page(request):
+    return Cart.as_view()(request)
 
 def Cart_add(request,id_product):
     if not request.user.is_authenticated:    
         messages.warning(request,'Чтобы добавить товар в корзину надо Авторизоватся в Аккаунт')
+        return render(request,'Main/Main.html')
     
-    user = request.user
+    Add_to_Cart(request,id_product)
+    
+
+    
+    

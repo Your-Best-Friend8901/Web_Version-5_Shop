@@ -16,25 +16,38 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from sito_web import views
+from sito_web import views_CBV,views_FBV
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    ####################### Админка
     path('admin/', admin.site.urls),
-    path('', views.Main_Page, name='Main'),
+    #######################
+    
+    ####################### Основная Страница
+    path('', views_FBV.Main_Page, name='Main'),
+    #######################
 
     ####################### Авторизация
-    path('registration/', views.Registration, name='Registration'),
-    path('main_auth/', views.Main_auth, name='Main_auth'),
-    path('login/', views.Login, name='Login'),
-    path('Verification_email/', views.Verificate_Email, name='Login2'),
+    #### FBV
+    path('main_auth/', views_FBV.Main_auth, name='Main_auth'),
+    #### CBV
+    path('registration/', views_CBV.RegistrationView.as_view(), name='Registration'),
+    path('login/', views_CBV.LoginView.as_view(), name='Login'),
+    path('Verification_email/', views_CBV.CodeView.as_view(), name='Login2'),
     ########################
 
     ######################## Корзина
-    path('cart/',views.Cart,name='Cart'),
-    path('cart/add/<int:id_product>/',views.Cart_add,name='Cart_add'),
+    #### FBV
+    path('cart/add/<int:id_product>/',views_FBV.Cart_add,name='Cart_add'),
+    #### CBV
+    path('cart/',views_CBV.Cart.as_view(),name='Cart'),
     ########################
-    path('category/<str:category_name>/',views.Category,name='Category'),
+
+    ######################## Категорий
+    #### FBV
+    path('category/<str:category_name>/',views_FBV.Category,name='Category'),
+    ########################
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

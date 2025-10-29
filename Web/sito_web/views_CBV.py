@@ -1,13 +1,13 @@
 from django.views.generic import FormView,View
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
-from .forms import RegistrationForm,CodeForm
+from sito_web.forms import RegistrationForm,CodeForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import render,redirect
 from sito_web.Func.func import Create_code
-from .models import Code_save
+from sito_web.models import Code_save,Cart_Item
 
 
 
@@ -74,6 +74,15 @@ class RegistrationView(FormView):
         messages.success(request=self.request,message='Вы прошли Регистрацию теперь за Логинтесь')
         return super().form_valid(form)
     
+class Cart(View):
+    def get(self,request):
+        if not request.user.is_autheticated:
+            messages.warning(request,'Чтобы увидеть товар в корзине надо Авторизоватся в Аккаунт')      
+            return render(request,'Main/Main.html')  
+        cart_item = Cart_Item.objects.filter(cart__user=request.user)
+        return render(request,'Cart/Cart.html',context={'cart_item': cart_item})
+
+        
 
 
     
