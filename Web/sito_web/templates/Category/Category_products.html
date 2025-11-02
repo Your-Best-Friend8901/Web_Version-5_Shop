@@ -1,0 +1,31 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{%static 'category_products.css' %}">
+    <title>Products</title>
+</head>
+<body>
+    {% if products %}
+        {% for product in products %}
+            <div class="products">
+                <div class="product">
+                    <form action="{% url 'Cart_add' product.id %}">
+                        <p>{{product.name}} - {{product.price}} руб</p>
+                        <div class="button">
+                            <button type="submit">Отправить в корзину</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <form action="{% url 'Exit' 'Category'%}">
+        <div class="Exit">
+            <button type="submit"><-- Exit </button>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,19 +1,4 @@
-"""
-URL configuration for Web project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from sito_web import views_CBV,views_FBV
@@ -47,7 +32,16 @@ urlpatterns = [
 
     ######################## Категорий
     #### FBV
-    path('category/<str:category_name>/',views_FBV.Category,name='Category'),
+    path('category/',views_FBV.Category,name='Category'),
+    path('category/<str:category_name>/',views_FBV.Category_products,name='Category_products'),
     ########################
-    
+
+    ######################## Выход 
+    #### FBV
+    path('Exit/<str:Page>/',views_FBV.Exit,name='Exit'),
+    ########################
+
+    ######################## Оплата
+    path('Buy/',views_FBV.Buy_product,name='Buy')
+    ########################
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -83,5 +83,26 @@ def Add_to_Cart(request,id_product):
 
     cart, create = Cart.objects.get_or_create(user=user)
 
-    cart_item = Cart_Item.objects.create(cart=cart,product=product,quantity=1)
+    item, create= Cart_Item.objects.get_or_create(cart=cart,product=product)
     
+    if create is False:
+        item.quantity += 1
+        item.save()
+
+def Category_filter(request,category_name):
+    try:
+        product_list = Products.objects.filter(category=category_name)
+    
+        if len(product_list) == 0:
+            return False
+    
+        return product_list
+    except Exception as e:
+        print(f'Error: {e}')
+
+def Sum_price(cart_item):
+    sum_price = 0
+    for i in cart_item:
+        price =i.product.price
+        sum_price += price
+    return sum_price

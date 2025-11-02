@@ -11,13 +11,13 @@
     <div class="head">
         
         <div>
-            <form action="{% url 'Main' %}" method="get">
+            <form action="{% url 'Category' %}" method="get">
                 <button name="Teleport" value="category">Категория</button>
             </form>
         </div>
 
         <div>
-            <form action="{% url 'Main' %}" method="get">
+            <form action="{% url 'Cart' %}" method="get">
                 <button name="Teleport" value="Cart">Корзина</button>
             </form>
         </div>
@@ -36,8 +36,8 @@
         {% endif %}
     </div>
     <div class="category">
-        <div class="category-1"><a href="{% url 'Category' category_name='Молочное'%}"><button>Молочное</button></a></div>
-        <div class="category-2"><a href="{% url 'Category' category_name='Мясо' %}"><button>Мясо</button></a></div>
+        <div class="category-1"><a href="{% url 'Category_products' 'Dairy_products' %}"><button>Молочное</button></a></div>
+        <div class="category-2"><a href="{% url 'Category_products' 'Meet' %}"><button>Мясо</button></a></div>
     </div>
     <div class="Main">
         <h3>Добро пожаловать на сайт</h3>

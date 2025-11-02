@@ -1,0 +1,11 @@
+.products {
+    display: flex;
+}
+
+.product {
+    display: flex;
+}
+
+.button {
+    display: flex;
+}

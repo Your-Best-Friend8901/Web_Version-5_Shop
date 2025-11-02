@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import render,redirect
-from sito_web.Func.func import Create_code
+from sito_web.Func.func import Create_code,Sum_price
 from sito_web.models import Code_save,Cart_Item
 
 
@@ -76,11 +76,13 @@ class RegistrationView(FormView):
     
 class Cart(View):
     def get(self,request):
-        if not request.user.is_autheticated:
+        if not request.user.is_authenticated:
             messages.warning(request,'Чтобы увидеть товар в корзине надо Авторизоватся в Аккаунт')      
             return render(request,'Main/Main.html')  
         cart_item = Cart_Item.objects.filter(cart__user=request.user)
-        return render(request,'Cart/Cart.html',context={'cart_item': cart_item})
+        sum_price = Sum_price(cart_item)
+        return render(request,'Cart/Cart.html',context={'cart_item': cart_item,
+                                                        'sum_price': sum_price})
 
         
 

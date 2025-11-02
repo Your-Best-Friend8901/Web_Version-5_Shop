@@ -23,13 +23,15 @@ class Products(models.Model):
                                 validators=[FileExtensionValidator(['jpg','webp','png'])])
 
     def __str__(self):
-        return f'name:{self.name} price:{self.price}'
+        return f'name:{self.name} price:{self.price} category {self.category}'
  
 class Cart_Item(models.Model):
     cart = models.ForeignKey(Cart , on_delete=models.CASCADE)
     product= models.ForeignKey(Products, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=1)
 
+    def __str__(self):
+        return f'cart:{self.cart} product:{self.product} quatity:{self.quantity}'
 #class Cart(models.Model):
 #    user = models.OneToOneField(User , on_delete=models.CASCADE)
 #    product_name = models.CharField(max_length=100)
