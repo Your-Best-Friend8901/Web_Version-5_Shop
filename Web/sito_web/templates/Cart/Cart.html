@@ -9,11 +9,11 @@
     {%if cart_item %}
         {%for item in cart_item %}
             <p>{{item.product.name}} - {{item.product.price}} руб </p>
-            <form action="{% url 'Cart_add' item.product.id %}">
+            <form action="{% url 'Cart_add/delete' 'add' item.product.id %}">
                 Штук:{{item.quantity}}
                 <button type="submit"> + </button>
             </form>
-            <form action="{% url 'Cart_delete' item.product.id%}"><button type="submit"> - </button></form>
+            <form action="{% url 'Cart_add/delete' 'delete' item.product.id%}"><button type="submit"> - </button></form>
         {%endfor%}
     {%endif%}
 
@@ -23,7 +23,7 @@
             {%if cart_item %}
                 {%for item in cart_item %}
                     <div class="Menu_products">
-                        <p>{{item.product.name}} x {{item.quantity}}</p>
+                        <p>{{item.product.name}} x {{item.quantity}}</p>         
                     </div>
                 {%endfor%}
                     <h3>Полная Сумма:</h3>

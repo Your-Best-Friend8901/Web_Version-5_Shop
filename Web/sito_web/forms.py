@@ -70,3 +70,14 @@ class RegistrationForm(forms.Form):
         except KeyError:
             pass
         return cleaned_data
+    
+class ContextForm(forms.Form):
+    ava = forms.ImageField()
+    first_name = forms.CharField(max_length=16, widget=forms.TextInput)
+    last_name = forms.CharField(max_length=16, widget=forms.TextInput) 
+    context = forms.CharField(max_length=100, widget=forms.TextInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        return cleaned_data

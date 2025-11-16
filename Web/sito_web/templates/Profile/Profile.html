@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile </title>
+</head>
+<body>
+    {% if messages %}
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    {% endif %}
+
+    {% if profile_avatar %}
+            <div class="Profile">
+                <div class="Teg_Profile"><p>Добро пожаловать это ваш Профиль </p></div>
+                <img src="{{ profile_avatar.ava.url }}" alt="Аватарка вашего профиля"> - {{profile_avatar.Context.user.username}}
+                <p>Имя:</p>
+                {{profile_avatar.user.first_name}}
+                <p>Фамилия:</p>
+                {{profile_avatar.user.last_name}}
+                <p>О себе:</p>
+                {{profile_avatar.context}}
+            </div>
+    
+    <form action="{% url 'Profile_edit' %}" method="get">
+        {%csrf_token%}
+        <button type="submit">Изменить Профиль</button>
+    </form>
+    {% elif profile_avatar2 %}
+            <div class="Profile">
+                <div class="Teg_Profile"><p>Добро пожаловать это ваш Профиль </p></div>
+                    {{profile_avatar2.Context.user.username}}    
+                <form action="{% url 'Profile_edit' %}" method="post" enctype="multipart/form-data">
+                    {{Form.ava}}
+                    <p>Имя:</p>
+                        {{Form.first_name.label_tag}} {{Form.first_name}}
+                    <p>Фамилия:</p>
+                        {{Form.last_name.label_tag}} {{Form.last_name}}
+                    <p>О себе:</p>
+                        {{Form.context.label_tag}} {{Form.context}}
+                        {%csrf_token%}
+                    <button type="submit">Принять изминения</button>
+                </form>    
+            </div>
+    {% endif %}
+</body>
+</html>

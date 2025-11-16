@@ -22,6 +22,13 @@ class Products(models.Model):
                                 blank=True,
                                 validators=[FileExtensionValidator(['jpg','webp','png'])])
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['price']),
+            models.Index(fields=['name']),
+            models.Index(fields=['category'])
+        ]
+
     def __str__(self):
         return f'name:{self.name} price:{self.price} category {self.category}'
  
@@ -30,6 +37,11 @@ class Cart_Item(models.Model):
     product= models.ForeignKey(Products, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['cart'])
+        ]
+
     def __str__(self):
         return f'cart:{self.cart} product:{self.product} quatity:{self.quantity}'
 #class Cart(models.Model):
@@ -37,4 +49,11 @@ class Cart_Item(models.Model):
 #    product_name = models.CharField(max_length=100)
 #    price = models.DecimalField(max_digits=10, decimal_places=2 )
 #    imagin = models.ImageField()
+
+class Profile_Context(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    context = models.CharField(max_length=100,default='')
+    ava = models.ImageField(upload_to='avatar/')
+    def __str__(self):
+        return f'first_name:{self.user.first_name},last_name:{self.user.last_name},context:{self.context}'
     

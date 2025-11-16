@@ -1,13 +1,13 @@
-from django.views.generic import FormView,View
+from django.views.generic import FormView,View,UpdateView
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
-from sito_web.forms import RegistrationForm,CodeForm
+from sito_web.forms import RegistrationForm,CodeForm,ContextForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import render,redirect
 from sito_web.Func.func import Create_code,Sum_price
-from sito_web.models import Code_save,Cart_Item
+from sito_web.models import Code_save,Cart_Item,Profile_Context
 
 
 
@@ -79,14 +79,68 @@ class Cart(View):
         if not request.user.is_authenticated:
             messages.warning(request,'Чтобы увидеть товар в корзине надо Авторизоватся в Аккаунт')      
             return render(request,'Main/Main.html')  
-        cart_item = Cart_Item.objects.filter(cart__user=request.user)
-        sum_price = Sum_price(cart_item)
+        cart_item = Cart_Item.objects.select_related('product').filter(cart__user=request.user)
+        sum_price,product_price = Sum_price(cart_item)
+        request.session['Page'] = 'Cart'
         return render(request,'Cart/Cart.html',context={'cart_item': cart_item,
-                                                        'sum_price': sum_price})
+                                                        'sum_price': sum_price,
+                                                        'product_price':product_price})
 
+class Profile(View):
+    def get(self,request):
+        if not request.user.is_authenticated:
+            messages.warning(request,'Чтобы Зайти в свой профиль надо Авторизаватся в Аккаунт ')      
+            return render(request,'Main/Main.html')  
         
+        profile_avatar,create =Profile_Context.objects.get_or_create(user= request.user)
+        return render(request,'Profile/Profile.html',context={'profile_avatar':profile_avatar})
 
 
+class Profile_edit_Succes(View):
+    def get(self,request):
+        
+        profile_avatar,create =Profile_Context.objects.get_or_create(user= request.user)
+
+        return render(request,'Profile/Profile.html',context={'Form': ContextForm,
+                                                              'profile_avatar2':profile_avatar})
     
+    def post(self,request):
+        Form = ContextForm(request.POST,request.FILES)
+        if Form.is_valid():
+            first_name=Form.cleaned_data['first_name']
+            last_name=Form.cleaned_data['last_name']
+            context=Form.cleaned_data['context']
+            ava = Form.cleaned_data['ava']
+
+            context_user = Profile_Context.objects.get(user=request.user)
+            user = request.user
+
+            user.first_name = first_name
+            user.last_name = last_name
+
+            context_user.ava = ava
+            context_user.context = context
+
+            context_user.save()
+            user.save()
+
+            messages.success(request,'Профиль был изминен')
+
+            return redirect('Profile')
+
+        else:
+            messages.error(request,'Не получилось изменить Профиль')
+
+            return redirect('Profile')
+            
+
+# Будещий вариант для изминения профиля 
+#class Profile_edit_context(UpdateView):
+#    form_class = ''
+#    template_name = ''
+#    model = ''
+#    success_url = ''
+
+
 #class UniversalView()
 

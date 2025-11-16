@@ -77,17 +77,28 @@ def Random_Product(request):
     products = Products.objects.order_by('?')[:5]
     
 
-def Add_to_Cart(request,id_product):
+def Add_Delete_to_Cart(request,function,id_product):
     product =Products.objects.get(id=id_product)
     user = request.user
 
     cart, create = Cart.objects.get_or_create(user=user)
-
     item, create= Cart_Item.objects.get_or_create(cart=cart,product=product)
-    
+
+
     if create is False:
-        item.quantity += 1
-        item.save()
+        if function == 'add':
+            item.quantity += 1
+            item.save()
+        elif function == 'delete':
+            if item.quantity == 1:
+                item.delete()
+            else:
+                item.quantity -= 1
+                item.save()
+
+
+
+    
 
 def Category_filter(request,category_name):
     try:
@@ -102,7 +113,9 @@ def Category_filter(request,category_name):
 
 def Sum_price(cart_item):
     sum_price = 0
+    product_price = []
     for i in cart_item:
-        price =i.product.price
+        price =i.product.price * i.quantity
+        product_price.append(price)
         sum_price += price
-    return sum_price
+    return sum_price, product_price

@@ -12,7 +12,7 @@
         {% for product in products %}
             <div class="products">
                 <div class="product">
-                    <form action="{% url 'Cart_add' product.id %}">
+                    <form action="{% url 'Cart_add/delete' 'add' product.id %}">
                         <p>{{product.name}} - {{product.price}} руб</p>
                         <div class="button">
                             <button type="submit">Отправить в корзину</button>

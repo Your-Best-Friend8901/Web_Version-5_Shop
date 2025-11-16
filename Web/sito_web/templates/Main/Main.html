@@ -23,8 +23,8 @@
         </div>
         {% if user.is_authenticated %}
         <div>
-            <form action="{% url 'Main' %}" method="get">
-                <button name="Teleport" value="Account">Аккаунт</button>
+            <form action="{% url 'Profile' %}" method="get">
+                <button>Аккаунт</button>
             </form>
         </div>
         {% else %}
@@ -51,17 +51,15 @@
     <div class="products">
         {% if products%}
             {% for product in products%}
-                <form action="{% url 'Cart_add' product.id %}" method="post">
+                <form action="{% url 'Cart_add/delete' 'add' product.id  %}" method="post">
                     {% csrf_token%}
-                    {% if product.imagin%}
                     <div class="product">
-                        <img src="{{ product.imagin.url }}" alt="{{product.name}}" >
-                    </div>
-                    {% endif %}
+                        <img src="{{ product.imagin.url }}" alt="Картинка Продукта = product.name" >
                     <div class="textbutton">
                         <p>{{product.name}} price:{{product.price}} руб</p>
                         <button type="submit"> + </button>
                     </div>
+                    
                 </form>
             {% endfor %}
         {% endif %}
