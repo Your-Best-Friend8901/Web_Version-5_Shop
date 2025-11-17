@@ -26,32 +26,6 @@
         {% endfor %}
     {% endif %}
     
-    <div class="products">
-        <div class="Meet">
-            <form action="{% url 'Category_products' 'Meat' %}" method="get">
-                <p>Мясо:</p>
-                <button type="submit">Нажмите</button>
-            </form>
-        </div>
-        <div class="Fruit">
-            <form action="{% url 'Category_products' 'Fruit'%}" method="get">
-                <p>Фрукты:</p>
-                <button type="submit">Нажмите</button>
-            </form>
-        </div>
-        <div class="Vegetables">
-            <form action="{% url 'Category_products' 'Vegetables' %}" method="get">
-                <p>Овощи:</p>
-                <button type="submit">Нажмите</button>
-            </form>
-        </div>
-        <div class="Dairy_products">
-            <form action="{% url 'Category_products' 'Dairy_products' %}" method="get">
-                <p>Молочные продукты:</p>
-                <button type="submit">Нажмите</button>
-            </form>
-        </div>
-    </div>
 
     <form action="{% url 'Exit' 'Main'%}">
         <div class="Exit">
