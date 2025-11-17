@@ -31,8 +31,7 @@ class Products(models.Model):
     class Meta:
         indexes = [
             models.Index(fields=['price']),
-            models.Index(fields=['name']),
-            models.Index(fields=['category'])
+            models.Index(fields=['name'])
         ]
 
     def __str__(self):

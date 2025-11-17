@@ -3,6 +3,7 @@ from sito_web.Func.func import Add_Delete_to_Cart,Category_filter
 from .views_CBV import RegistrationView,LoginView,CodeView,Cart
 from django.contrib import messages
 from django.views.decorators.cache import cache_page
+from .models import Products,Category
 # Create your views here.
 
 ############### <Основная страница>
@@ -26,11 +27,9 @@ def Category_Page(request):
 ######## Филитр продуктов
 def Category_products(request,category_name):
     filter_result = Category_filter(request,category_name)
-
     if filter_result is False:
         messages.error(request,'В этой категорий еще нету продуктов')
         return render(request,'Category/Category.html')
-    request.session['Page'] = 'Category'
     return render(request,'Category/Category_products.html',context={'products': filter_result})
 
 ######## <Добавить/Удалить Продукт>

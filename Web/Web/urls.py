@@ -32,7 +32,7 @@ urlpatterns = [
 
     ######################## <Категорий>
     #### FBV
-    path('category/',views_FBV.Category,name='Category'),
+    path('category/',views_FBV.Category_Page,name='Category'),
     path('category/<str:category_name>/',views_FBV.Category_products,name='Category_products'),
     ######################## <Категорий/>
 

@@ -18,7 +18,7 @@
     {% if Categorys %}
         {% for Category in Categorys %}
             <div class="Category">
-                <form action="{%url 'Category_products' Category.name%}">
+                <form action="{%url 'Category_products' Category.name %}">
                     <p>{{Category.name}}:</p>
                     <button type="submit">Нажмите</button>
                 </form>
