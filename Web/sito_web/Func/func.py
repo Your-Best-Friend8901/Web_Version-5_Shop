@@ -5,45 +5,6 @@ from sito_web.models import Code_save,Products,Cart,Cart_Item
 from django.contrib.auth.models import User
 
 
-def Router_Get(request):
-
-    def Verification_Get(request):
-        check_data = request.GET.get('Teleport',None)
-        print("Все GET параметры:", dict(request.GET))
-        
-        if check_data is None:
-            products = Products.objects.order_by('?')[:5]
-            return render(request,'Main/Main.html',context={'check_data': check_data,
-                                                            'products' : products})
-        
-        return Search_in_dicts(request,value=check_data)
-
-
-    def Search_in_dicts(request,value):
-        dicts = {'category':{'context':{'category'}},
-                 'Cart':{'template':'Cart/Cart.html'},
-                 'Account':{'template':'Profile/Profile.html'},
-                 'Menu_auth':{'template':'Main_auth/Main_auth.html'}}
-
-        Position_dict = dicts.get(value)
-        if value == 'category':
-            Position_object = Position_dict.get('context')
-        else:
-            Position_object = Position_dict.get('template')
-
-        return Render_Page(request,keys= Position_object)
-        
-
-    def Render_Page(request,keys):
-
-        if type(keys) == dict:
-            return render(request,'Main/Main.html',context=keys)
-        
-        return render(request,keys)
-       
-    return Verification_Get(request)
-    
-
 # {'head':{'Корзина':'Cart',
 #                     'Аккаунт':'Account',
 #                     'Гость':'Guest'},

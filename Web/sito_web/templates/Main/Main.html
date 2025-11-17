@@ -12,13 +12,13 @@
         
         <div>
             <form action="{% url 'Category' %}" method="get">
-                <button name="Teleport" value="category">Категория</button>
+                <button >Категория</button>
             </form>
         </div>
 
         <div>
             <form action="{% url 'Cart' %}" method="get">
-                <button name="Teleport" value="Cart">Корзина</button>
+                <button >Корзина</button>
             </form>
         </div>
         {% if user.is_authenticated %}
@@ -29,8 +29,8 @@
         </div>
         {% else %}
         <div>
-            <form action="{% url 'Main' %}" method="get">
-                <button name="Teleport" value="Menu_auth">Логин/Регистрация</button>
+            <form action="{% url 'Main_auth' %}" method="get">
+                <button>Логин/Регистрация</button>
             </form>
         </div>
         {% endif %}

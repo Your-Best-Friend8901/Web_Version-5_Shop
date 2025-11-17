@@ -99,7 +99,7 @@ class Profile(View):
 class Profile_edit_Succes(View):
     def get(self,request):
         
-        profile_avatar,create =Profile_Context.objects.get_or_create(user= request.user)
+        profile_avatar,create =Profile_Context.objects.select_related('user').get_or_create(user= request.user)
 
         return render(request,'Profile/Profile.html',context={'Form': ContextForm,
                                                               'profile_avatar2':profile_avatar})

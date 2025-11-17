@@ -1,20 +1,22 @@
 from django.shortcuts import render,redirect
-from sito_web.Func.func import Add_Delete_to_Cart,Router_Get,Category_filter
+from sito_web.Func.func import Add_Delete_to_Cart,Category_filter
 from .views_CBV import RegistrationView,LoginView,CodeView,Cart
 from django.contrib import messages
 from django.views.decorators.cache import cache_page
+from .models import Products
 # Create your views here.
 
 ############### <Основная страница>
 @cache_page(60*15)
 def Main_Page(request):
     request.session['Page'] = 'Main'
-    return Router_Get(request)
+    products = Products.objects.order_by('?')[:5]
+    return render(request,'Main/Main.html',context={'product':products})
 ############### <Основная страница/>
 
 ############### <Меню Авторизаций>
 def Main_auth(request):
-    return Router_Get(request)
+    return render(request,'Main_auth/Main_auth.html')
 ############### <Меню Авторизаций/>
 
 ############### <Категория>
