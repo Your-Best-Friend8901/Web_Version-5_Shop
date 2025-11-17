@@ -3,6 +3,7 @@ from sito_web.Func.func import Add_Delete_to_Cart,Router_Get,Category_filter
 from .views_CBV import RegistrationView,LoginView,CodeView,Cart
 from django.contrib import messages
 from django.views.decorators.cache import cache_page
+from .models import Category
 # Create your views here.
 
 ############### <Основная страница>
@@ -18,8 +19,9 @@ def Main_auth(request):
 ############### <Меню Авторизаций/>
 
 ############### <Категория>
-def Category(request):
-    return render(request,'Category/Category.html')
+def Category_Page(request):
+    Categorys = Category.objects.all()
+    return render(request,'Category/Category.html',context={'Categorys':Categorys})
 
 ######## Филитр продуктов
 def Category_products(request,category_name):

@@ -14,10 +14,16 @@ class Code_save(models.Model):
 class Cart(models.Model):
     user = models.OneToOneField(User , on_delete=models.CASCADE)
 
+class Category(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"{self.name}"
+
 class Products(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2 )
-    category = models.CharField(max_length=50) 
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     imagin = models.ImageField(upload_to='products/', 
                                 blank=True,
                                 validators=[FileExtensionValidator(['jpg','webp','png'])])

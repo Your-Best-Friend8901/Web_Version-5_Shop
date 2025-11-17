@@ -102,7 +102,7 @@ def Add_Delete_to_Cart(request,function,id_product):
 
 def Category_filter(request,category_name):
     try:
-        product_list = Products.objects.filter(category=category_name)
+        product_list = Products.objects.filter(category__name=category_name)
     
         if len(product_list) == 0:
             return False

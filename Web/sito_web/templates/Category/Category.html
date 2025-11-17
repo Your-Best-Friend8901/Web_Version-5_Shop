@@ -15,6 +15,17 @@
         {% endfor %}
     {% endif %}
 
+    {% if Categorys %}
+        {% for Category in Categorys %}
+            <div class="Category">
+                <form action="{%url 'Category_products' Category.name%}">
+                    <p>{{Category.name}}:</p>
+                    <button type="submit">Нажмите</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
     <div class="products">
         <div class="Meet">
             <form action="{% url 'Category_products' 'Meat' %}" method="get">
