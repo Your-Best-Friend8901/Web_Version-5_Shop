@@ -15,11 +15,13 @@ def Main_Page(request):
 ############### <Основная страница/>
 
 ############### <Меню Авторизаций>
+@cache_page(60*60)
 def Main_auth(request):
     return render(request,'Main_auth/Main_auth.html')
 ############### <Меню Авторизаций/>
 
 ############### <Категория>
+@cache_page(60*15)
 def Category_Page(request):
     Categorys = Category.objects.all()
     return render(request,'Category/Category.html',context={'Categorys':Categorys})

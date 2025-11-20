@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 import random
 from sito_web.models import Code_save,Products,Cart,Cart_Item
 from django.contrib.auth.models import User
+from django.db.models import Sum,F
 
 
 # {'head':{'Корзина':'Cart',
@@ -72,11 +73,12 @@ def Category_filter(request,category_name):
     except Exception as e:
         print(f'Error: {e}')
 
-def Sum_price(cart_item):
-    sum_price = 0
-    product_price = []
-    for i in cart_item:
-        price =i.product.price * i.quantity
-        product_price.append(price)
-        sum_price += price
-    return sum_price, product_price
+
+def Sum_Price(user):
+    Sum_product= Cart_Item.objects.filter(cart__user=user).select_related('product').only('product__name','product__price','quantity').annotate(
+                Sum_product_price=F('product__price') * F('quantity'))
+    
+    
+    Sum_products =Sum_product.aggregate(Sum_prices=Sum(F('product__price') * F('quantity')))
+
+    return Sum_product,Sum_products

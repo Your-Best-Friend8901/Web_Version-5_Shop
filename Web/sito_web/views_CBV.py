@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import render,redirect
-from sito_web.Func.func import Create_code,Sum_price
+from sito_web.Func.func import Create_code,Sum_Price
 from sito_web.models import Code_save,Cart_Item,Profile_Context
 
 
@@ -79,12 +79,10 @@ class Cart(View):
         if not request.user.is_authenticated:
             messages.warning(request,'Чтобы увидеть товар в корзине надо Авторизоватся в Аккаунт')      
             return render(request,'Main/Main.html')  
-        cart_item = Cart_Item.objects.select_related('product').filter(cart__user=request.user)
-        sum_price,product_price = Sum_price(cart_item)
+        Sum_product,Sum_products = Sum_Price(user = request.user)
         request.session['Page'] = 'Cart'
-        return render(request,'Cart/Cart.html',context={'cart_item': cart_item,
-                                                        'sum_price': sum_price,
-                                                        'product_price':product_price})
+        return render(request,'Cart/Cart.html',context={'products': Sum_product,
+                                                        'Sum_products': Sum_products})
 
 class Profile(View):
     def get(self,request):

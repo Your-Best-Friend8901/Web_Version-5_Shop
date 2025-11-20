@@ -6,8 +6,8 @@
     <title>Cart</title>
 </head>
 <body>
-    {%if cart_item %}
-        {%for item in cart_item %}
+    {%if products %}
+        {%for item in products %}
             <p>{{item.product.name}} - {{item.product.price}} руб </p>
             <form action="{% url 'Cart_add/delete' 'add' item.product.id %}">
                 Штук:{{item.quantity}}
@@ -20,15 +20,15 @@
     <div class="Menu_Price">
         <div class="Teg">
             <h3>Товары</h3>
-            {%if cart_item %}
-                {%for item in cart_item %}
+            {%if products %}
+                {%for item in products %}
                     <div class="Menu_products">
-                        <p>{{item.product.name}} x {{item.quantity}}</p>         
+                        <p>{{item.product.name}} x {{item.quantity}} = {{item.Sum_product_price}}</p>         
                     </div>
                 {%endfor%}
                     <h3>Полная Сумма:</h3>
                     <form action="{%url 'Buy'%}">
-                        <button type="submit">{{sum_price}}</button>
+                        <button type="submit">{{Sum_products.Sum_prices}}</button>
                     </form>
             {%endif%}
         </div>
