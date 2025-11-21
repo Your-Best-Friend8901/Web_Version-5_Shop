@@ -19,7 +19,12 @@
         {% for Category in Categorys %}
             <div class="Category">
                 <form action="{%url 'Category_products' Category.name %}">
-                    <p>{{Category.name}}:</p>
+                    {% if Category.number_products == 0 %}
+                    <p>{{Category.name}} Продуктов:{{Category.number_products}}</p>
+                    {% else %}
+                    <p>{{Category.name}} Продуктов:{{Category.number_products}}</p>
+                    <p>от{{Category.Min_price}}руб до{{Category.Max_price}}руб</p>
+                    {% endif %}
                     <button type="submit">Нажмите</button>
                 </form>
             </div>

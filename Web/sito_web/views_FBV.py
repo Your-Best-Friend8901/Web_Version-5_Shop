@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from sito_web.Func.func import Add_Delete_to_Cart,Category_filter
+from sito_web.Func.func import Add_Delete_to_Cart,Category_filter,CountProduct_Category
 from .views_CBV import RegistrationView,LoginView,CodeView,Cart
 from django.contrib import messages
 from django.views.decorators.cache import cache_page
@@ -23,7 +23,7 @@ def Main_auth(request):
 ############### <Категория>
 @cache_page(60*15)
 def Category_Page(request):
-    Categorys = Category.objects.all()
+    Categorys = CountProduct_Category()
     return render(request,'Category/Category.html',context={'Categorys':Categorys})
 
 ######## Филитр продуктов

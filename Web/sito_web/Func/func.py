@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect
 from django.core.mail import send_mail
 import random
-from sito_web.models import Code_save,Products,Cart,Cart_Item
+from sito_web.models import Code_save,Products,Cart,Cart_Item,Category
 from django.contrib.auth.models import User
-from django.db.models import Sum,F
+from django.db.models import Sum,F,Count,Max,Min
 
 
 # {'head':{'Корзина':'Cart',
@@ -82,3 +82,9 @@ def Sum_Price(user):
     Sum_products =Sum_product.aggregate(Sum_prices=Sum(F('product__price') * F('quantity')))
 
     return Sum_product,Sum_products
+
+def CountProduct_Category():
+    return  Category.objects.all().annotate(
+            number_products=Count('products'),
+            Max_price=Max('products__price'), 
+            Min_price=Min('products__price'))
