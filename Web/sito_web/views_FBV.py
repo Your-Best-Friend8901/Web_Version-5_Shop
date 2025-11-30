@@ -7,7 +7,6 @@ from .models import Products,Category
 # Create your views here.
 
 ############### <Основная страница>
-@cache_page(60*15)
 def Main_Page(request):
     request.session['Page'] = 'Main'
     products = Products.objects.order_by('?')[:5]

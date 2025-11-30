@@ -4,6 +4,7 @@ import random
 from sito_web.models import Code_save,Products,Cart,Cart_Item,Category
 from django.contrib.auth.models import User
 from django.db.models import Sum,F,Count,Max,Min
+from django.core.cache import cache
 
 
 # {'head':{'Корзина':'Cart',
@@ -84,7 +85,19 @@ def Sum_Price(user):
     return Sum_product,Sum_products
 
 def CountProduct_Category():
-    return  Category.objects.all().annotate(
-            number_products=Count('products'),
-            Max_price=Max('products__price'), 
-            Min_price=Min('products__price'))
+    key = 'CountProduct_Category'
+    time = 60*10
+    Count_Price =cache.get('CountProduct_Category')
+
+    if Count_Price is None:
+        Count_Price = Category.objects.all().annotate(
+                        number_products=Count('products'),
+                        Max_price=Max('products__price'), 
+                        Min_price=Min('products__price'))
+
+        result= list(Count_Price.values())   
+        cache.set(key, result, time)
+        return result
+
+    else:
+        return Count_Price

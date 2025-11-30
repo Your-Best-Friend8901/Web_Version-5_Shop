@@ -1,19 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart</title>
+    <link rel="stylesheet" href="{% static 'cart.css'%}">
 </head>
 <body>
     {%if products %}
         {%for item in products %}
             <p>{{item.product.name}} - {{item.product.price}} руб </p>
-            <form action="{% url 'Cart_add/delete' 'add' item.product.id %}">
-                Штук:{{item.quantity}}
-                <button type="submit"> + </button>
-            </form>
-            <form action="{% url 'Cart_add/delete' 'delete' item.product.id%}"><button type="submit"> - </button></form>
+            <div class="Products">
+                <form action="{% url 'Cart_add/delete' 'add' item.product.id %}">
+                    Штук:{{item.quantity}}
+                    <button type="submit"> + </button>
+                </form>
+                <form action="{% url 'Cart_add/delete' 'delete' item.product.id%}"><button type="submit"> - </button></form>
+            </div>
         {%endfor%}
     {%endif%}
 

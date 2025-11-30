@@ -6,3 +6,5 @@ db.sqlite3
 0001_initial.py
 0002_alter_cart_item_quantity_profile_context_and_more.py
 0003_alter_profile_context_context_and_more.py
+0003_remove_products_sito_web_pr_categor_40ba5e_idx.py
+0002_category_and_more.py
