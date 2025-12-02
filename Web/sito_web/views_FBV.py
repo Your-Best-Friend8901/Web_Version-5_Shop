@@ -20,7 +20,6 @@ def Main_auth(request):
 ############### <Меню Авторизаций/>
 
 ############### <Категория>
-@cache_page(60*15)
 def Category_Page(request):
     Categorys = CountProduct_Category()
     return render(request,'Category/Category.html',context={'Categorys':Categorys})

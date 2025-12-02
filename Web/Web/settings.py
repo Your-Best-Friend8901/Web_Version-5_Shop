@@ -91,10 +91,11 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/0",
+        "LOCATION": "redis://redis-14324.c339.eu-west-3-1.ec2.cloud.redislabs.com:14324/0",
         "OPTIONS": {
+            "PASSWORD": os.getenv('PasswordCache'),
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "TIMEOUT": 300,
+            "TIMEOUT": 300, 
             "KEY_PREFIX": "my_project_cache"}
     }
 }

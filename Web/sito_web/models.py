@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
-
+from PIL import Image
+from django.core.files.base import ContentFile
+from io import BytesIO
 # Create your models here.
 class Code_save(models.Model):
     user_id = models.CharField(max_length=100)
@@ -62,3 +64,16 @@ class Profile_Context(models.Model):
     def __str__(self):
         return f'first_name:{self.user.first_name},last_name:{self.user.last_name},context:{self.context}'
     
+    def save(self,**kwargs):
+        if self.ava:
+            self.ava.save('Avatar.jpg',img_ContentFile(self.ava,(500,500)),save=False)
+        return super().save(**kwargs)
+    
+
+def img_ContentFile(image,size,forms='JPEG',quality=85):
+    img = Image.open(image)
+    buffer = BytesIO()
+    img.thumbnail((size))
+    img.save(buffer,'JPEG',quality=quality)
+    buffer.seek(0)
+    return ContentFile(buffer.getvalue())
