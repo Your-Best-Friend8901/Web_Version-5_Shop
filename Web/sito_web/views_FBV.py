@@ -1,57 +1,67 @@
 from django.shortcuts import render,redirect
-from sito_web.Func.func import Add_Delete_to_Cart,Category_filter,CountProduct_Category
-from .views_CBV import RegistrationView,LoginView,CodeView,Cart
+from sito_web.Func.func import func_delete_or_add_product,category_filter,count_product_category,get_random_products
+from sito_web.Func import func
+from .views_CBV import RegistrationView,CodeView,Cart
 from django.contrib import messages
 from django.views.decorators.cache import cache_page
 from .models import Products,Category
 # Create your views here.
 
 ############### <Основная страница>
-def Main_Page(request):
-    request.session['Page'] = 'Main'
-    products = Products.objects.order_by('?')[:5]
-    return render(request,'Main/Main.html',context={'product':products})
+def main_page(request):
+    request.session['Page'] = 'main'
+    random_products = func.get_random_products()
+    return render(request,'Main/main.html',context={'random_products':random_products})
 ############### <Основная страница/>
 
 ############### <Меню Авторизаций>
 @cache_page(60*60)
-def Main_auth(request):
-    return render(request,'Main_auth/Main_auth.html')
+def main_auth(request):
+    return render(request,'main_auth/main_auth.html')
 ############### <Меню Авторизаций/>
 
 ############### <Категория>
-def Category_Page(request):
-    Categorys = CountProduct_Category()
-    return render(request,'Category/Category.html',context={'Categorys':Categorys})
+def category_page(request):
+    categories = func.count_product_category()
+    return render(request,'Category/category.html',context={'categories':categories})
 
 ######## Филитр продуктов
-def Category_products(request,category_name):
-    filter_result = Category_filter(request,category_name)
-    if filter_result is False:
-        messages.error(request,'В этой категорий еще нету продуктов')
-        return render(request,'Category/Category.html')
-    return render(request,'Category/Category_products.html',context={'products': filter_result})
+def category_products(request,category_name):
+    products = func.category_filter(category_name)
+    return render(request,'Category/сategory_products.html',context={'products': products})
 
 ######## <Добавить/Удалить Продукт>
-def Add_delete_product(request,function,id_product):
+def delete_or_add_product(request,function,id_product):
     ####### Проверка аутефикаиций
     if not request.user.is_authenticated:    
                 messages.warning(request,'Чтобы добавить товар в корзину надо Авторизоватся в Аккаунт')
-                return render(request,'Main/Main.html')
+                return render(request,'Main/main.html')
     direction = request.session['Page']
     ####### Сам процесс
-    Add_Delete_to_Cart(request,function,id_product)
+    func.func_delete_or_add_product(request,function,id_product)
     return redirect(direction)
 ######## <Добавить/Удалить Продукт/>
 
 ############### <Категория/>
-    
+
+############### <Отправка кода>
+def send_code_to_email(request):
+    try:
+        func.create_code(request)
+
+        return redirect('login2')
+            
+    except ValueError:
+        messages.error(request,'Произошла ошибка повторить отправку кода')
+        return redirect('login2')
+############### <Отправка кода/>
+
 ############### <Выход>
-def Exit(request,Page):
+def exit(request,Page):
     return redirect(Page)
 ############### <Выход/>
     
 ############### <Оплата>
-def Buy_product(request):
+def buy_product(request):
     return render(request,'Buy_product/main.html')
 ############### <Оплата/.>

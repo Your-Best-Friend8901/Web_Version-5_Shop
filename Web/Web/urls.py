@@ -11,43 +11,47 @@ urlpatterns = [
     #######################
     
     ####################### Основная Страница
-    path('', views_FBV.Main_Page, name='Main'),
+    path('', views_FBV.main_page, name='main'),
     ####################### <Админка/>
 
     ####################### <Авторизация>
     #### FBV
-    path('main_auth/', views_FBV.Main_auth, name='Main_auth'),
+    path('main_auth/', views_FBV.main_auth, name='main_auth'),
     #### CBV
-    path('registration/', views_CBV.RegistrationView.as_view(), name='Registration'),
-    path('login/', views_CBV.LoginView.as_view(), name='Login'),
-    path('Verification_email/', views_CBV.CodeView.as_view(), name='Login2'),
+    path('registration/', views_CBV.RegistrationView.as_view(), name='registration'),
+    path('login/', views_CBV.Login_view.as_view(), name='login'),
+    path('Verification_email/', views_CBV.CodeView.as_view(), name='login2'),
     ######################## <Авторизация/>
 
     ######################## <Корзина>
     #### FBV
-    path('cart/<str:function>/<int:id_product>/',views_FBV.Add_delete_product,name='Cart_add/delete'),
+    path('cart/<str:function>/<int:id_product>/',views_FBV.delete_or_add_product,name='Cart_add/delete'),
     #### CBV
     path('cart/',views_CBV.Cart.as_view(),name='Cart'),
     ######################## <Корзина/>
 
     ######################## <Категорий>
     #### FBV
-    path('category/',views_FBV.Category_Page,name='Category'),
-    path('category/<str:category_name>/',views_FBV.Category_products,name='Category_products'),
+    path('category/',views_FBV.category_page,name='category'),
+    path('category/<str:category_name>/',views_FBV.category_products,name='category_products'),
     ######################## <Категорий/>
 
+    ############### <Отправка кода>
+    path('send_code/',views_FBV.send_code_to_email,name='send_code'),
+    ############### <Отправка кода/>
+    
     ######################## <Выход> 
     #### FBV
-    path('exit/<str:Page>/',views_FBV.Exit,name='Exit'),
+    path('exit/<str:Page>/',views_FBV.exit,name='exit'),
     ######################## <Выход/> 
 
     ######################## <Оплата>
-    path('buy/',views_FBV.Buy_product,name='Buy'),
+    path('buy/',views_FBV.buy_product,name='buy'),
     ######################## <Оплата/>
 
     ######################## <Профиль>
     path('profile/',views_CBV.Profile.as_view(),name='Profile'),
-    path('profile/edit/',views_CBV.Profile_edit_Succes.as_view(),name='Profile_edit'),
+    path('profile/edit/',views_CBV.Profile_edit.as_view(),name='Profile_edit'),
     ######################## <Профиль/>
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

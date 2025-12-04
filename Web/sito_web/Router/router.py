@@ -122,3 +122,22 @@ def Router_Get(request):
         return render(request,keys)
        
     return Verification_Get(request)
+
+
+#def category_filter(category_name):
+#    KEY = 'all_products'
+#   TIMEOUT = 60 * 5 
+#
+#    values = cache.get(KEY,None)
+#
+#    if values is None:
+#        product_list = Products.objects.select_related('category').all()
+#        values = list(product_list.values())
+#        cache.set(KEY,values,TIMEOUT)
+
+#    box = []
+#    for value in values:
+#        if value['category__name'] == category_name:
+#           box.append(value)
+#    return box
+# Супер крутая имбулика в которая я сохраняю все продукте в кеше чтобы не делать запросы в бд это увеличивает скорост ьи дает гибкость том что я могу использовать кеш все товаррова где захочу

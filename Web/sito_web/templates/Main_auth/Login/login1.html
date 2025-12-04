@@ -6,7 +6,7 @@
     <title>Login</title>
 </head>
 <body>
-    <form action="{% url 'Login'%}" method="post">
+    <form action="{% url 'login'%}" method="post">
         {%csrf_token%}
         {{form}}
         <button type="submit">Отправить</button>

@@ -11,7 +11,7 @@ from django.core.cache import cache
 #                     'Аккаунт':'Account',
 #                     'Гость':'Guest'},
 
-def Create_code(request):
+def create_code(request):
     code =random.randint(100000,999999)
     user_id = request.session.get('user_id',None)
 
@@ -20,10 +20,10 @@ def Create_code(request):
     
     Code_save.objects.create(user_id=user_id,code=code)
 
-    Send_code(code=code,id=user_id)
+    send_code(code=code,id=user_id)
     
 
-def Send_code(code,id):
+def send_code(code,id):
     try:
         user = User.objects.get(id=id)
         email = user.email
@@ -40,7 +40,7 @@ def Random_Product(request):
     products = Products.objects.order_by('?')[:5]
     
 
-def Add_Delete_to_Cart(request,function,id_product):
+def func_delete_or_add_product(request,function,id_product):
     product =Products.objects.get(id=id_product)
     user = request.user
 
@@ -63,17 +63,20 @@ def Add_Delete_to_Cart(request,function,id_product):
 
     
 
-def Category_filter(request,category_name):
-    try:
-        product_list = Products.objects.filter(category__name=category_name)
-    
-        if len(product_list) == 0:
-            return False
-    
-        return product_list
-    except Exception as e:
-        print(f'Error: {e}')
+def category_filter(category_name):
+    KEY = str(category_name)
+    TIMEOUT = 60 * 5 + random.randint(1,100)
 
+    values = cache.get(KEY,None)
+
+    if values is None:
+        product_list = Products.objects.filter(category__name=category_name)
+        values = list(product_list.values())
+        cache.set(KEY,values,TIMEOUT)
+        return values
+    else:
+        return values
+    
 
 def Sum_Price(user):
     Sum_product= Cart_Item.objects.filter(cart__user=user).select_related('product').only('product__name','product__price','quantity').annotate(
@@ -84,20 +87,34 @@ def Sum_Price(user):
 
     return Sum_product,Sum_products
 
-def CountProduct_Category():
-    key = 'CountProduct_Category'
-    time = 60*10
-    Count_Price =cache.get('CountProduct_Category')
+def count_product_category():
+    KEY = 'count_product_category'
+    TIME = 60*10
+    products =cache.get(KEY,None)
 
-    if Count_Price is None:
-        Count_Price = Category.objects.all().annotate(
+    if products is None:
+        queryset_document = Category.objects.all().annotate(
                         number_products=Count('products'),
                         Max_price=Max('products__price'), 
                         Min_price=Min('products__price'))
 
-        result= list(Count_Price.values())   
-        cache.set(key, result, time)
-        return result
+        queryset_value= list(queryset_document.values())   
+        cache.set(KEY, queryset_value, TIME)
+        return queryset_value
 
     else:
-        return Count_Price
+        return products
+    
+def get_random_products():
+    TIME = 60 * 5
+    KEY = 'get_random_products'
+
+    products = cache.get( KEY,None)
+
+    if products is None:
+        queryset_document = Products.objects.order_by('?')[:5]
+        queryset_value =list(queryset_document.values())
+        cache.set(KEY,queryset_value,TIME)
+        return queryset_value
+    else:
+        return products

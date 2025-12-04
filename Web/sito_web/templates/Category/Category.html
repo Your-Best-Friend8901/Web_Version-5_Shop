@@ -15,10 +15,10 @@
         {% endfor %}
     {% endif %}
 
-    {% if Categorys %}
-        {% for Category in Categorys %}
+    {% if categories %}
+        {% for Category in categories %}
             <div class="Category">
-                <form action="{%url 'Category_products' Category.name %}">
+                <form action="{%url 'category_products' Category.name %}">
                     {% if Category.number_products == 0 %}
                     <p>{{Category.name}} Продуктов:{{Category.number_products}}</p>
                     {% else %}
@@ -32,8 +32,8 @@
     {% endif %}
     
 
-    <form action="{% url 'Exit' 'Main'%}">
-        <div class="Exit">
+    <form action="{% url 'exit' 'main'%}">
+        <div class="exit">
             <button type="submit"><-- Exit </button>
         </div>
     </form>

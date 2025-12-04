@@ -6,16 +6,17 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import render,redirect
-from sito_web.Func.func import Create_code,Sum_Price
+from sito_web.Func.func import Sum_Price
 from sito_web.models import Code_save,Cart_Item,Profile_Context
+from sito_web.Func import func
 
 
 
 
-class LoginView(FormView):
+class Login_view(FormView):
     template_name = 'Main_auth/Login/login1.html'
     form_class = AuthenticationForm
-    success_url = reverse_lazy('Login2')
+    success_url = reverse_lazy('login2')
 
     def form_valid(self, form):
 
@@ -25,46 +26,30 @@ class LoginView(FormView):
         return super().form_valid(form)
     
     
-class CodeView(View):
-    def get(self,request):
-        check_get = self.request.GET.get('send_code',None)
-        form = CodeForm()
-        try:
+class CodeView(FormView):
+    template_name = 'Main_auth/Login/verification_email.html'
+    form_class = CodeForm
+    success_url = reverse_lazy('main')
 
-            if check_get is None:
-                return render(request=self.request,template_name='Main_auth/Login/Verification_email.html',context={'form':form})
-            
-            Create_code(request=self.request)
+    def form_valid(self, form):
+        user_id = self.request.session['user_id']
+        user = User.objects.get(id=user_id)
 
-            return render(request=self.request,template_name='Main_auth/Login/Verification_email.html',context={'form':form})
-        
-        except ValueError:
+        Code_save.objects.filter(user_id=user_id).delete()
 
-            return render(request=self.request,template_name='Main/Main.html',context={'error':'Что то пошло не так повторить Авторизацию'})
+        login(request=self.request, user=user)
+        messages.success(self.request,'Вы прошли Авторизацию')
+        return super().form_valid(form)
     
-    def post(self,request):
-
-        form = CodeForm(self.request.POST,request=self.request)
-
-        if form.is_valid():
-            user_id = self.request.session['user_id']
-            user = User.objects.get(id=user_id)
-
-            Code_save.objects.filter(user_id=user_id).delete()
-
-            login(request=self.request, user=user)
-            messages.success(request,'Вы прошли Авторизацию')
-            return redirect('Main')
-            
-        else:
-            return render(request=self.request,template_name='Main_auth/Login/Verification_email.html',context={'form':form})
-
+    def form_invalid(self, form):
+        messages.warning(request=self.request,message='Ваш код не подходит')
+        return super().form_invalid(form)
 
 
 class RegistrationView(FormView):
-    template_name = 'Main_auth/Registration/Registration.html'
+    template_name = 'Main_auth/Registration/registration.html'
     form_class = RegistrationForm
-    success_url = reverse_lazy('Main')
+    success_url = reverse_lazy('login')
     
     def form_valid(self, form):
         username = form.cleaned_data['username']
@@ -73,16 +58,16 @@ class RegistrationView(FormView):
         User.objects.create_user(username=username,password=password,email=email)
         messages.success(request=self.request,message='Вы прошли Регистрацию теперь за Логинтесь')
         return super().form_valid(form)
-    
+     
 class Cart(View):
     def get(self,request):
         if not request.user.is_authenticated:
             messages.warning(request,'Чтобы увидеть товар в корзине надо Авторизоватся в Аккаунт')      
             return render(request,'Main/Main.html')  
-        Sum_product,Sum_products = Sum_Price(user = request.user)
+        product_price,sum_products = Sum_Price(user = request.user)
         request.session['Page'] = 'Cart'
-        return render(request,'Cart/Cart.html',context={'products': Sum_product,
-                                                        'Sum_products': Sum_products})
+        return render(request,'Cart/Cart.html',context={'products': product_price,
+                                                        'Sum_products': sum_products})
 
 class Profile(View):
     def get(self,request):
@@ -90,11 +75,11 @@ class Profile(View):
             messages.warning(request,'Чтобы Зайти в свой профиль надо Авторизаватся в Аккаунт ')      
             return render(request,'Main/Main.html')  
         
-        profile_avatar,create =Profile_Context.objects.get_or_create(user= request.user)
-        return render(request,'Profile/Profile.html',context={'profile_avatar':profile_avatar})
+        profile_data,create =Profile_Context.objects.get_or_create(user= request.user)
+        return render(request,'Profile/Profile.html',context={'profile_data':profile_data})
 
 
-class Profile_edit_Succes(View):
+class Profile_edit(View):
     def get(self,request):
         
         profile_avatar,create =Profile_Context.objects.select_related('user').get_or_create(user= request.user)
