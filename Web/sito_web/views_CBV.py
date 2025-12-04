@@ -9,6 +9,8 @@ from django.shortcuts import render,redirect
 from sito_web.Func.func import Sum_Price
 from sito_web.models import Code_save,Cart_Item,Profile_Context
 from sito_web.Func import func
+from django.core.cache import cache
+import random
 
 
 
@@ -75,17 +77,38 @@ class Profile(View):
             messages.warning(request,'Чтобы Зайти в свой профиль надо Авторизаватся в Аккаунт ')      
             return render(request,'Main/Main.html')  
         
-        profile_data,create =Profile_Context.objects.get_or_create(user= request.user)
-        return render(request,'Profile/Profile.html',context={'profile_data':profile_data})
+        KEY = request.user.id
+        TIMEOUT = 60000 + random.randint(1,1000)
+        
+        data_profile = cache.get(KEY,None)
+        
+        if data_profile is None:
+            object,create =Profile_Context.objects.select_related('user').get_or_create(user= request.user)
+            data_profile_dict = {
+                'user__first_name': object.user.first_name,
+                'user__last_name':object.user.last_name,
+                'context':object.context,
+                'ava': object.ava
+                }
+            cache.set(KEY,data_profile_dict,TIMEOUT)
+            return render(request,'Profile/Profile.html',context={'profile_data':data_profile_dict})
+
+        return render(request,'Profile/Profile.html',context={'profile_data':data_profile})
 
 
 class Profile_edit(View):
     def get(self,request):
         
-        profile_avatar,create =Profile_Context.objects.select_related('user').get_or_create(user= request.user)
+        KEY = request.user.id
+
+        data_profile = cache.get(KEY,None)
+
+        if data_profile is None:
+            messages.warning(request,'Повторите попытку ваш кеш истек')
+            redirect('profile')
 
         return render(request,'Profile/Profile.html',context={'Form': ContextForm,
-                                                              'profile_avatar2':profile_avatar})
+                                                              'profile_avatar2':data_profile})
     
     def post(self,request):
         Form = ContextForm(request.POST,request.FILES)

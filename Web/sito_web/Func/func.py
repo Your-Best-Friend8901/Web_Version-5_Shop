@@ -36,9 +36,6 @@ def send_code(code,id):
         print(f'Error:{e}')
 
 
-def Random_Product(request):
-    products = Products.objects.order_by('?')[:5]
-    
 
 def func_delete_or_add_product(request,function,id_product):
     product =Products.objects.get(id=id_product)
@@ -70,8 +67,8 @@ def category_filter(category_name):
     values = cache.get(KEY,None)
 
     if values is None:
-        product_list = Products.objects.filter(category__name=category_name)
-        values = list(product_list.values())
+        product_list = Products.objects.values('name','price','id').filter(category__name=category_name)
+        values = list(product_list)
         cache.set(KEY,values,TIMEOUT)
         return values
     else:
