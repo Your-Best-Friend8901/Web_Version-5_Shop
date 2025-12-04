@@ -11,7 +11,7 @@
     <div class="head">
         
         <div>
-            <form action="{% url 'Category' %}" method="get">
+            <form action="{% url 'category' %}" method="get">
                 <button >Категория</button>
             </form>
         </div>
@@ -29,16 +29,18 @@
         </div>
         {% else %}
         <div>
-            <form action="{% url 'Main_auth' %}" method="get">
+            <form action="{% url 'main_auth' %}" method="get">
                 <button>Логин/Регистрация</button>
             </form>
         </div>
         {% endif %}
     </div>
+    
     <div class="category">
-        <div class="category-1"><a href="{% url 'Category_products' 'Dairy_products' %}"><button>Молочное</button></a></div>
-        <div class="category-2"><a href="{% url 'Category_products' 'Meet' %}"><button>Мясо</button></a></div>
+        <div class="category-1"><a href="{% url 'category_products' 'Dairy_products' %}"><button>Молочное</button></a></div>
+        <div class="category-2"><a href="{% url 'category_products' 'Meet' %}"><button>Мясо</button></a></div>
     </div>
+
     <div class="Main">
         <h3>Добро пожаловать на сайт</h3>
         
@@ -48,18 +50,18 @@
             {% endfor %}
         {% endif %}
     </div>
+
     <div class="products">
-        {% if products%}
-            {% for product in products%}
+        {% if random_products%}
+            {% for product in random_products%}
                 <form action="{% url 'Cart_add/delete' 'add' product.id  %}" method="post">
                     {% csrf_token%}
                     <div class="product">
-                        <img src="{{ product.imagin.url }}" alt="Картинка Продукта = product.name" >
+                        <img src="{{ product.imagin.url }}" alt="Картинка Продукта {{product.name}}" >
                     <div class="textbutton">
                         <p>{{product.name}} price:{{product.price}} руб</p>
                         <button type="submit"> + </button>
                     </div>
-                    
                 </form>
             {% endfor %}
         {% endif %}

@@ -13,22 +13,27 @@
         {% endfor %}
     {% endif %}
 
-    {% if profile_avatar %}
+    {% if profile_data %}
             <div class="Profile">
                 <div class="Teg_Profile"><p>Добро пожаловать это ваш Профиль </p></div>
-                <img src="{{ profile_avatar.ava.url }}" alt="Аватарка вашего профиля"> - {{profile_avatar.Context.user.username}}
+                    {% if profile_data.ava %}
+                    <img src="{{ profile_data.ava.url }}" alt="Аватарка вашего профиля"> - {{profile_data.ava.Context.user.username}}
+                    {% else %}
+                    {{profile_data.ava.Context.user.username}}
+                    {% endif %}
                 <p>Имя:</p>
-                {{profile_avatar.user.first_name}}
+                {{profile_data.user.first_name}}
                 <p>Фамилия:</p>
-                {{profile_avatar.user.last_name}}
+                {{profile_data.user.last_name}}
                 <p>О себе:</p>
-                {{profile_avatar.context}}
+                {{profile_data.context}}
             </div>
     
     <form action="{% url 'Profile_edit' %}" method="get">
         {%csrf_token%}
         <button type="submit">Изменить Профиль</button>
     </form>
+
     {% elif profile_avatar2 %}
             <div class="Profile">
                 <div class="Teg_Profile"><p>Добро пожаловать это ваш Профиль </p></div>

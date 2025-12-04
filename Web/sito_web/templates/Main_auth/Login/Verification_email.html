@@ -6,13 +6,14 @@
     <title>Email</title>
 </head>
 <body>
-    <form action="{%url 'Login2'%}" method="post">
+    <form action="{%url 'login2'%}" method="post">
         {%csrf_token%}
         {{form}}
         <button type="submit">Отправить</button>
     </form>
     <br>
-    <form action="{%url 'Login2'%}" method="get">
+    <form action="{%url 'send_code'%}" method="post">
+        {%csrf_token%}
         <button name="send_code" value="send_code">Отправить код на вашу почту</button>
     </form>
 </body>
