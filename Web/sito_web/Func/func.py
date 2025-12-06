@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum,F,Count,Max,Min
 from django.core.cache import cache
 from django.contrib import messages
+from router import router_cache
 
 # {'head':{'Корзина':'Cart',
 #                     'Аккаунт':'Account',
@@ -100,22 +101,15 @@ def Sum_Price(user):
     return Sum_product,Sum_products
 
 def count_product_category():
-    KEY = 'count_product_category'
-    TIME = 60*10
-    products =cache.get(KEY,None)
-
-    if products is None:
-        queryset_document = Category.objects.all().annotate(
+    router_cache()
+    queryset_document = Category.objects.all().annotate(
                         number_products=Count('products'),
                         Max_price=Max('products__price'), 
                         Min_price=Min('products__price'))
 
-        queryset_value= list(queryset_document.values())   
-        cache.set(KEY, queryset_value, TIME)
-        return queryset_value
+    queryset_value= list(queryset_document.values())   
+    return queryset_value
 
-    else:
-        return products
     
 def get_random_products():
     TIME = 60 * 5
