@@ -6,6 +6,13 @@
     <title>Email</title>
 </head>
 <body>
+    
+    {% if messages %}
+        {% for message in messages %}
+        {{message}}
+        {% endfor %}
+    {% endif %}
+
     <form action="{%url 'login2'%}" method="post">
         {%csrf_token%}
         {{form}}

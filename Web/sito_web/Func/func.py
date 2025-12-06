@@ -5,27 +5,42 @@ from sito_web.models import Code_save,Products,Cart,Cart_Item,Category
 from django.contrib.auth.models import User
 from django.db.models import Sum,F,Count,Max,Min
 from django.core.cache import cache
-
+from django.contrib import messages
 
 # {'head':{'Корзина':'Cart',
 #                     'Аккаунт':'Account',
 #                     'Гость':'Guest'},
-
 def create_code(request):
-    code =random.randint(100000,999999)
-    user_id = request.session.get('user_id',None)
+
+    SESSION_ID = request.session.session_key
+    
+    KEY_CODE =f'code:{SESSION_ID}'
+    TIMEOUT = 180 + random.randint(-20,20)
+
+    cache_code = cache.get(KEY_CODE,None)
+
+
+    KEY_USER_ID = f'cache_user_id:{request.session.session_key}'
+
+    user_id =cache.get(KEY_USER_ID,None)
 
     if user_id is None:
-        raise ValueError
-    
-    Code_save.objects.create(user_id=user_id,code=code)
+        messages.warning(request,'Ваша сессия закончилось повторить Занова Авторизацию')
+        raise ValueError() 
 
-    send_code(code=code,id=user_id)
+    elif cache_code is None:
+        cache_code =random.randint(100000,999999)
+        send_code(code=cache_code,id=user_id)
+        cache.set(KEY_CODE,cache_code,TIMEOUT)
+
+    else:
+        messages.warning(request=request,message=f'Код уже был отправлен подождите {time}сек для следущего кода')        
+    
     
 
-def send_code(code,id):
+def send_code(code,id):   
     try:
-        user = User.objects.get(id=id)
+        user = User.objects.only('email').get(id=id)
         email = user.email
         subject ='Отправлен код '
         message = f'Ваш код {code}'
@@ -67,7 +82,7 @@ def category_filter(category_name):
     values = cache.get(KEY,None)
 
     if values is None:
-        product_list = Products.objects.values('name','price','id').filter(category__name=category_name)
+        product_list = Products.objects.filter(category__name=category_name).values('name','price','id')
         values = list(product_list)
         cache.set(KEY,values,TIMEOUT)
         return values
@@ -109,8 +124,8 @@ def get_random_products():
     products = cache.get( KEY,None)
 
     if products is None:
-        queryset_document = Products.objects.order_by('?')[:5]
-        queryset_value =list(queryset_document.values())
+        queryset_document = Products.objects.order_by('?')[:5].values('id','price','imagin')
+        queryset_value =list(queryset_document)
         cache.set(KEY,queryset_value,TIME)
         return queryset_value
     else:

@@ -21,9 +21,15 @@ class Login_view(FormView):
     success_url = reverse_lazy('login2')
 
     def form_valid(self, form):
+        user = form.get_user().id
+        KEY = f'cache_user_id:{self.request.session.session_key}'
+        TIME = 160 + random.randint(0,20)
 
-        user = form.get_user()
-        self.request.session['user_id'] = user.id
+        user_id =cache.get(KEY,None)
+
+        if user_id is None:
+            cache.set(KEY,user,TIME)
+            messages.success(self.request,'Вы прошли 1часть Авторизаций у вас есть 3минуты чтобы закончить 2часть для Входа в Аккаунт')
         
         return super().form_valid(form)
     
@@ -34,12 +40,17 @@ class CodeView(FormView):
     success_url = reverse_lazy('main')
 
     def form_valid(self, form):
-        user_id = self.request.session['user_id']
-        user = User.objects.get(id=user_id)
+        try:
+            KEY = f'cache_user_id:{self.request.session.session_key}'
+            user_id = cache.get(KEY,None)
 
-        Code_save.objects.filter(user_id=user_id).delete()
+            user = User.objects.get(id=user_id)
+            login(request=self.request, user=user)
 
-        login(request=self.request, user=user)
+        except Exception:
+            messages.error('Сессия истека повторите попытку')
+            redirect('login')
+
         messages.success(self.request,'Вы прошли Авторизацию')
         return super().form_valid(form)
     
@@ -77,7 +88,7 @@ class Profile(View):
             messages.warning(request,'Чтобы Зайти в свой профиль надо Авторизаватся в Аккаунт ')      
             return render(request,'Main/Main.html')  
         
-        KEY = request.user.id
+        KEY = f'profile:{request.user.id}'
         TIMEOUT = 60000 + random.randint(1,1000)
         
         data_profile = cache.get(KEY,None)
@@ -99,7 +110,7 @@ class Profile(View):
 class Profile_edit(View):
     def get(self,request):
         
-        KEY = request.user.id
+        KEY = f'profile:{request.user.id}'
 
         data_profile = cache.get(KEY,None)
 
