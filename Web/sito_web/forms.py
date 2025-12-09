@@ -3,7 +3,6 @@ from django.forms import ValidationError
 from django.contrib.auth.models import User
 from .models import Code_save
 from django.core.cache import cache
-from sito_web.Func.func import 
 
 class CodeForm(forms.Form):
     code = forms.CharField(max_length=7, widget=forms.TextInput)

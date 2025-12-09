@@ -26,6 +26,8 @@ def setting_dict_and_start_render(request,dicts,Page,Access):
     else:
         request.session['Access'] = None
         return render(request,'Main_Page/Main.html')
+    
+    return setting_dict_and_start_render(request,dicts,Page,Access)  
 
 def Handler(request,Page,Access):
     dicts= {'Main':{'Main': [None,True],
@@ -48,7 +50,7 @@ def Handler(request,Page,Access):
             'Page': 'Registration.html',
             'Folder': 'Main_Page'},
 
-            'Profil': {'Profile': [False],
+            'Profil': {'Profile': [True],
             'Page': 'Profile.html',
             'Folder': 'Main_Page'}}
     
