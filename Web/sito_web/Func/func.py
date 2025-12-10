@@ -101,7 +101,6 @@ def Sum_Price(user):
     return Sum_product,Sum_products
 
 def count_product_category():
-    router_cache()
     queryset_document = Category.objects.all().annotate(
                         number_products=Count('products'),
                         Max_price=Max('products__price'), 
