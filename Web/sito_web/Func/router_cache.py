@@ -7,13 +7,13 @@ def router_cache(path,request,category_name=None,data=None):
     SESSION_ID = request.session.session_key
 
     dict_keys_cache = {
-        'profile/':
+        'profile':
         {
             'KEY' : f'profile:{request.user.id}',
             'TIMEOUT' : 60000 + random.randint(1,1000)
         },
 
-        '':
+        'main':
         {
             'KEY':'get_random_products',
             'TIMEOUT': 300
@@ -54,7 +54,18 @@ def router_cache(path,request,category_name=None,data=None):
 
     try:
         if result['CONTINUE']:
+            KEY = result['KEY']
+            TIMEOUT = result['TIMEOUT']
+
+            data_cache =cache.get(KEY,None)
+
+        if data_cache is None:
+
+
             cache2 = result['CONTINUE']
+            # Понял сдеси проблема в самой проверки я кеширую даже не зная если они есть либо нет и это не допустимо меня это злит но я это оставлю на завтра
+            # Сейчас отдохну чтобы набрать силы на завтра ото сегодня я уже много чего сделал  например Router_fuction уже есть идея он будет возращать не только None но также и True 
+            
             cache_data = check_cache(result,data)
             cache2_data = check_cache(cache2,data)
 

@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 import random
 
-class Manager:
+class Function_Based_View():
 
     def count_product_category(self):
         queryset_document = Category.objects.all().annotate(
@@ -97,3 +97,8 @@ class Manager:
         else:
             messages.warning(request=request,message=f'Код уже был отправлен подождите сек для следущего кода')        
 
+
+class Class():
+    
+    def ds():
+        pass
