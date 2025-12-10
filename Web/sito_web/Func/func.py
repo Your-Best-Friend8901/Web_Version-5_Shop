@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum,F,Count,Max,Min
 from django.core.cache import cache
 from django.contrib import messages
-from router import router_cache
+from Web.sito_web.Func.router_cache import router_cache
 
 # {'head':{'Корзина':'Cart',
 #                     'Аккаунт':'Account',
@@ -111,15 +111,6 @@ def count_product_category():
 
     
 def get_random_products():
-    TIME = 60 * 5
-    KEY = 'get_random_products'
-
-    products = cache.get( KEY,None)
-
-    if products is None:
         queryset_document = Products.objects.order_by('?')[:5].values('id','price','imagin')
         queryset_value =list(queryset_document)
-        cache.set(KEY,queryset_value,TIME)
         return queryset_value
-    else:
-        return products

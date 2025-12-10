@@ -1,21 +1,19 @@
 import random
-from sito_web.admin import keys_randint_timeout
 import func
 from django.core.cache import cache
 
-def router_cache(Page,request,category_name=None,data=None):
+def router_cache(path,request,category_name=None,data=None):
 
-    randint_number = keys_randint_timeout.keys(Page)
     SESSION_ID = request.session.session_key
 
     dict_keys_cache = {
-        'profile':
+        'profile/':
         {
             'KEY' : f'profile:{request.user.id}',
             'TIMEOUT' : 60000 + random.randint(1,1000)
         },
 
-        'main':
+        '':
         {
             'KEY':'get_random_products',
             'TIMEOUT': 300
@@ -51,7 +49,7 @@ def router_cache(Page,request,category_name=None,data=None):
         }}
         
 
-    result = dict_keys_cache[f'{Page}']
+    result = dict_keys_cache[f'{path}']
 
 
     try:
@@ -83,4 +81,3 @@ def check_cache(result,data):
     else:
 
         cache.set(KEY,data,TIMEOUT)
-
