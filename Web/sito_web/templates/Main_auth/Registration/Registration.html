@@ -7,7 +7,7 @@
     <title>Registartion</title>
 </head>
 <body>
-    <form action="{% url 'Registration' %}" method="post">
+    <form action="{% url 'registration' %}" method="post">
         {% csrf_token %}
         <div>
             {{form}}

@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ValidationError
 from django.contrib.auth.models import User
 from .models import Code_save
+from django.core.cache import cache
 
 class CodeForm(forms.Form):
     code = forms.CharField(max_length=7, widget=forms.TextInput)
@@ -18,11 +19,10 @@ class CodeForm(forms.Form):
 
             if user_id is None:
                 raise ValidationError('Что то пошло не так повторить Авторизацию')
+            
+            
 
-            code_save = Code_save.objects.get(user_id=user_id)
-            code_db = code_save.code
-
-            if not str(code) == str(code_db):
+            if not str(code) == str(cache_code):
                 raise ValidationError('Код не совпадает с отправленым Повторите либо Отправте себе новый код на почту')
             
         except:
